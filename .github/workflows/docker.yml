@@ -22,7 +22,7 @@ jobs:
         run: docker buildx create --use
           
       - name: Build and push image
-        run: docker buildx build --platform linux/amd64 -t williamtheakergusto/micromdm:latest --push .
+        run: docker buildx build --platform linux/amd64,linux/arm64/v8,linux/arm/v6,linux/arm/v7 -t williamtheakergusto/micromdm:latest --push .
 
       # - name: Push image to Github Container Registry
         # run: docker push ghcr.io/OWNER/IMAGE_NAME:latest
