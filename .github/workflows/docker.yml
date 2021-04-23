@@ -15,8 +15,11 @@ jobs:
         with:
           fetch-depth: 1
 
-      - name: Login to Docker Hub
+      - name: Login to Docker Hub with access token
         run: echo ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }} | docker login --username williamtheakergusto --password-stdin
+          
+      - name: Create builder instance
+        run: docker buildx create --use
           
       - name: Build and push image
         run: docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7,linux/arm64/v8 -t williamtheakergusto/micromdm:latest --push .
