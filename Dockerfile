@@ -2,9 +2,12 @@ FROM golang:latest as builder
 
 WORKDIR /go/src/github.com/micromdm/micromdm/
 
+ARG TARGETARCH
+ARG TARGETOS
+
 ENV CGO_ENABLED=0 \
-	GOARCH=amd64 \
-	GOOS=linux
+	GOARCH=$TARGETARCH \
+	GOOS=$TARGETOS
 
 COPY . .
 
