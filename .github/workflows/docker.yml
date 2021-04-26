@@ -1,0 +1,40 @@
+name: Publish Docker image
+on:
+  release:
+    types: [published]
+jobs:
+  push_to_registry:
+    name: Build and push Docker image
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Set up QEMU for multi-architecture builds
+        uses: docker/setup-qemu-action@c308fdd69d26ed66f4506ebd74b180abe5362145 #v1.1.0
+        with:
+          image: tonistiigi/binfmt:latest
+          platforms: all
+
+      - name: Check out this repo
+        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
+        with:
+          fetch-depth: 1 # Checkout only latest commit
+
+      - name: Login to Github Packages Container registry with ephemeral token
+        run: docker login ghcr.io --username ${{ github.actor }} --password ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Login to Docker Hub with access token
+        run: echo ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }} | docker login --username micromdm --password-stdin
+
+      - name: Create builder instance
+        run: docker buildx create --use
+
+      - name: Build and push image
+        run: |
+          docker buildx build \
+           --platform linux/amd64,linux/arm,linux/arm64 \
+           --tag micromdm/micromdm:latest \
+           --tag micromdm/micromdm:${{ github.event.release.tag_name }} \
+           --tag ghcr.io/micromdm/micromdm:latest \
+           --tag ghcr.io/micromdm/micromdm:${{ github.event.release.tag_name }} \
+           --push \
+           .
