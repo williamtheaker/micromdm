@@ -1,5 +1,7 @@
 ## [Unreleased](https://github.com/micromdm/micromdm/compare/v1.8.0...main) TBD
 
+-  Add Docker workflow. Add ARM build. (#745)
+
 ## [v1.8.0](https://github.com/micromdm/micromdm/compare/v1.7.1...v1.8.0) February, 2021
 
 - Fix embedded manifest of InstallEnterpriseApplication (#669)
