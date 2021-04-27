@@ -22,9 +22,6 @@ jobs:
       - name: Login to Github Packages Container registry with ephemeral token
         run: docker login ghcr.io --username ${{ github.actor }} --password ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Login to Docker Hub with access token
-        run: echo ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }} | docker login --username micromdm --password-stdin
-
       - name: Create builder instance
         run: docker buildx create --use
 
@@ -32,8 +29,6 @@ jobs:
         run: |
           docker buildx build \
            --platform linux/amd64,linux/arm,linux/arm64 \
-           --tag micromdm/micromdm:latest \
-           --tag micromdm/micromdm:${{ github.event.release.tag_name }} \
            --tag ghcr.io/micromdm/micromdm:latest \
            --tag ghcr.io/micromdm/micromdm:${{ github.event.release.tag_name }} \
            --push \
